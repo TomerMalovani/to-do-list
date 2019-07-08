@@ -1,0 +1,15 @@
+body {
+    background: thistle;
+}
+
+.rmvBtn{
+    height: 20px;
+    width: 20px;
+    background-color: aquamarine;
+}
+
+.starBtn{
+       height: 20px;
+    width: 20px;
+    background-color: rgb(238, 255, 0);
+}
