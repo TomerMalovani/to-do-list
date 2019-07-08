@@ -25,7 +25,7 @@ class Input extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div className="inputWrap">
                 <input value={this.state.Inputvalue} onChange={this.changeInput} type="text" ></input>
                 <button onClick={this.localFuncAddTask}>press me gilad</button>
             </div>
@@ -47,17 +47,22 @@ class List extends React.Component {
         this.props.starTask(index);
     }
 
-    removeBtn(e) {
-        e.target.parentNode.remove();
+    removeBtn(index) {
+        this.props.delete(index);
     }
     render() {
         return (
-            <div>
-                <ul>
+            <div className="listWrap">
+                <ul className="Todolist">
+                    <li className="listItem listHeader">to do list</li>
                     {this.props.list.map((item, index) => (
-                        <li key={index}>{item}<button onClick={() => this.putAsFirst(index)} className="starBtn"></button>
-                            <button onClick={this.removeBtn} className="rmvBtn"></button></li>
+                        <li className="listItem" key={index}><span className={"listItemTxt" + this.prop.color}>{item}</span><div className="buttonWrap"><button onClick={() => this.putAsFirst(index)} className="starBtn"></button>
+                            <button onClick={() => this.removeBtn(index)} className="rmvBtn"></button></div></li>
                     ))}
+                </ul>
+
+                <ul className="comepleteTask">
+                    <li className="listItem listHeader">comeplete list</li>
                 </ul>
             </div>
         );
@@ -69,10 +74,20 @@ class App extends React.Component {
         super()
         this.state = {
             List: [],
+            color: "white"
 
         }
         this.AddTask = this.AddTask.bind(this);
         this.starTask = this.starTask.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
+    }
+
+    deleteItem(index) {
+        let tempList = [...this.state.List];
+        tempList.splice(index, 1);
+        this.setState({
+            List: tempList
+        });
     }
 
     starTask(index) {
@@ -87,15 +102,14 @@ class App extends React.Component {
     AddTask(newTask) {
 
         this.setState({
-            List: [...this.state.List, newTask],
+            List: [...this.state.List, newTask]
         });
     }
     render() {
         return (
-            <div>
+            <div className="wraper">
                 <Input TaskAdder={this.AddTask} />
-
-                <List list={this.state.List} starTask={this.starTask} />
+                <List color={this.state.color} delete={this.deleteItem} list={this.state.List} starTask={this.starTask} />
             </div>
         );
     }
