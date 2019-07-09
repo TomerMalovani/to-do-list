@@ -1,107 +1,145 @@
 class Input extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            Inputvalue: ""
-        }
-        this.changeInput = this.changeInput.bind(this);
-        this.localFuncAddTask = this.localFuncAddTask.bind(this);
+  constructor() {
+    super();
+    this.state = {
+      value: ""
+    };
+    this.changeInput = this.changeInput.bind(this);
+    this.addNewTask = this.addNewTask.bind(this);
+  }
+
+  addNewTask() {
+    if (this.state.value === "") {
+      return;
     }
 
-    localFuncAddTask() {
-        if (this.state.Inputvalue !== "") {
-            this.props.TaskAdder(this.state.Inputvalue);
-            this.setState({
-                Inputvalue: ""
-            });
-        }
+    this.props.handle(this.state.value);
+  }
 
-    }
+  changeInput(event) {
+    this.setState({
+      value: event.target.value
+    });
+  }
 
-    changeInput(e) {
-        this.setState({
-            Inputvalue: e.target.value
-        });
-    }
-    render() {
-        return (
-            <div>
-                <input value={this.state.Inputvalue} onChange={this.changeInput} type="text" ></input>
-                <button onClick={this.localFuncAddTask}>press me gilad</button>
-            </div>
-
-        );
-    }
+  render() {
+    return (
+      <div>
+        <input
+          value={this.state.value}
+          onChange={this.changeInput}
+          type="text"
+        />
+        <button onClick={this.addNewTask}>Add</button>
+      </div>
+    );
+  }
 }
 
+class ListItem extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-class List extends React.Component {
-    constructor() {
-        super()
-        this.removeBtn = this.removeBtn.bind(this);
-        this.putAsFirst = this.putAsFirst.bind(this);
-    }
-
-    putAsFirst(index) {
-        console.log(index);
-        this.props.starTask(index);
-    }
-
-    removeBtn(e) {
-        e.target.parentNode.remove();
-    }
-    render() {
-        return (
-            <div>
-                <ul>
-                    {this.props.list.map((item, index) => (
-                        <li key={index}>{item}<button onClick={() => this.putAsFirst(index)} className="starBtn"></button>
-                            <button onClick={this.removeBtn} className="rmvBtn"></button></li>
-                    ))}
-                </ul>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <li
+        style={{ display: this.props.isDone ? "none" : "block" }}
+        onClick={this.props.handleChangeItemList}
+        value={this.props.value}
+      >
+        <div
+          className={
+            "listItem listHeader" + this.props.isStar ? "starListItem" : ""
+          }
+        />
+        {this.props.value}
+        <button onClick={this.props.handleRemoveItem} className="rmvBtn" />
+        <button onClick={this.props.handleStarItem} className="starBtn" />
+      </li>
+    );
+  }
 }
 
 class App extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            List: [],
+  constructor() {
+    super();
+    this.state = {
+      list: []
+    };
+    this.changeTaskStar = this.changeTaskStar.bind(this);
+    this.addNewTaskToList = this.addNewTaskToList.bind(this);
+    this.changeItemList = this.changeItemList.bind(this);
+  }
 
-        }
-        this.AddTask = this.AddTask.bind(this);
-        this.starTask = this.starTask.bind(this);
-    }
+  addNewTaskToList(newTaskValue) {
+    this.setState({
+      list: [
+        ...this.state.list,
+        { value: newTaskValue, isStar: false, isDone: false }
+      ]
+    });
+  }
 
-    starTask(index) {
-        let tempList = [...this.state.List];
-        let tempItem = tempList[index];
-        tempList.splice(index, 1);
-        tempList = [tempItem, ...tempList];
+  changeItemList(event) {
+    let newList = [];
+    this.state.list.forEach(item => {
+      if (item.value == event.target.getAttribute("value"))
+        item.isDone = !item.isDone;
+      newList.push(item);
+    });
+
+    this.setState({ list: newList });
+  }
+
+  changeTaskStar(event, isStar) {
+    for (let i = 0; i < this.state.list.length; i++) {
+      if (listItem["value"] == event.target.value) {
+        let tmpList = list.splice();
+        tmpList[i] = {
+          value: tmpList[i].value,
+          isStar: isStar,
+          listType: tmpList[i].listType
+        };
+
         this.setState({
-            List: tempList
+          list: tmpList
         });
+      }
     }
-    AddTask(newTask) {
+  }
 
-        this.setState({
-            List: [...this.state.List, newTask],
-        });
-    }
-    render() {
-        return (
-            <div>
-                <Input TaskAdder={this.AddTask} />
-
-                <List list={this.state.List} starTask={this.starTask} />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <Input handle={this.addNewTaskToList} />
+        <h1>To Do</h1>
+        <ul>
+          {this.state.list.map((item, key) => (
+            <ListItem
+              key={key}
+              className={item.isStar ? "starListItem" : ""}
+              isDone={item.isDone}
+              handleChangeItemList={this.changeItemList}
+              value={item.value}
+            />
+          ))}
+        </ul>
+        <h1>Done</h1>
+        <ul>
+          {this.state.list.map((item, key) => (
+            <ListItem
+              key={key}
+              className={item.isStar ? "starListItem" : ""}
+              handleChangeItemList={this.changeItemList}
+              isDone={!item.isDone}
+              value={item.value}
+            />
+          ))}
+        </ul>
+      </div>
+    );
+  }
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById("root")
-);
+ReactDOM.render(<App />, document.getElementById("root"));
