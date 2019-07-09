@@ -24,8 +24,9 @@ class Input extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="inputWrap">
         <input
+          className="InputBar"
           value={this.state.value}
           onChange={this.changeInput}
           type="text"
@@ -73,6 +74,10 @@ class App extends React.Component {
   }
 
   addNewTaskToList(newTaskValue) {
+    let valList = this.state.list.map((item, key) => item.value);
+
+    if (valList.includes(newTaskValue)) return;
+
     this.setState({
       list: [
         ...this.state.list,
@@ -111,32 +116,36 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="Main">
         <Input handle={this.addNewTaskToList} />
-        <h1>To Do</h1>
-        <ul>
-          {this.state.list.map((item, key) => (
-            <ListItem
-              key={key}
-              className={item.isStar ? "starListItem" : ""}
-              isDone={item.isDone}
-              handleChangeItemList={this.changeItemList}
-              value={item.value}
-            />
-          ))}
-        </ul>
-        <h1>Done</h1>
-        <ul>
-          {this.state.list.map((item, key) => (
-            <ListItem
-              key={key}
-              className={item.isStar ? "starListItem" : ""}
-              handleChangeItemList={this.changeItemList}
-              isDone={!item.isDone}
-              value={item.value}
-            />
-          ))}
-        </ul>
+        <div className="ListWrap">
+          <h1 className="ToDoHeader">To Do:</h1>
+          <ul>
+            {this.state.list.map((item, key) => (
+              <ListItem
+                key={key}
+                className={item.isStar ? "starListItem" : ""}
+                isDone={item.isDone}
+                handleChangeItemList={this.changeItemList}
+                value={item.value}
+              />
+            ))}
+          </ul>
+        </div>
+        <div className="ListWrap">
+          <h1 className="ToDoHeader">Completed:</h1>
+          <ul className="Mainlist">
+            {this.state.list.map((item, key) => (
+              <ListItem
+                key={key}
+                className={item.isStar ? "starListItem" : ""}
+                handleChangeItemList={this.changeItemList}
+                isDone={!item.isDone}
+                value={item.value}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     );
   }
