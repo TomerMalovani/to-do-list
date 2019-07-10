@@ -115,6 +115,28 @@ class App extends React.Component {
     this.changeTaskStar = this.changeTaskStar.bind(this);
     this.addNewTaskToList = this.addNewTaskToList.bind(this);
     this.changeItemList = this.changeItemList.bind(this);
+    this.removeItem = this.removeItem.bind(this)
+    this.sendItemToTop = this.sendItemToTop.bind(this)
+
+  }
+
+  removeItem(key) {
+    let tmpList = this.state.list;
+    tmpList.splice(key, 1);
+    this.setState({
+      list: tmpList
+    });
+
+  }
+
+  // theres a bug here, ask about me.
+  sendItemToTop(item, key) {
+    let tmpList = this.state.list;
+    tmpList.splice(key, 1);
+    tmpList = [item.value, ...tmpList];
+    this.setState({
+      list: tmpList
+    });
   }
 
   addNewTaskToList(newTaskValue) {
