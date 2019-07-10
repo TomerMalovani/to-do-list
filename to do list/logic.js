@@ -56,7 +56,7 @@ class ListItem extends React.Component {
         />
         {this.props.value}
         <button onClick={this.props.handleRemoveItem} className="rmvBtn" />
-        <button onClick={this.props.handleStarItem} className="starBtn" />
+        <button onClick={this.props.handleStarReplacement} className="starBtn" />
       </li>
     );
   }
@@ -71,6 +71,28 @@ class App extends React.Component {
     this.changeTaskStar = this.changeTaskStar.bind(this);
     this.addNewTaskToList = this.addNewTaskToList.bind(this);
     this.changeItemList = this.changeItemList.bind(this);
+    this.removeItem = this.removeItem.bind(this)
+    this.sendItemToTop = this.sendItemToTop.bind(this)
+
+  }
+
+  removeItem(key) {
+    let tmpList = this.state.list;
+    tmpList.splice(key, 1);
+    this.setState({
+      list: tmpList
+    });
+
+  }
+
+  // theres a bug here, ask about me.
+  sendItemToTop(item, key) {
+    let tmpList = this.state.list;
+    tmpList.splice(key, 1);
+    tmpList = [item.value, ...tmpList];
+    this.setState({
+      list: tmpList
+    });
   }
 
   addNewTaskToList(newTaskValue) {
@@ -127,6 +149,8 @@ class App extends React.Component {
                 className={item.isStar ? "starListItem" : ""}
                 isDone={item.isDone}
                 handleChangeItemList={this.changeItemList}
+                handleRemoveItem={() => this.removeItem(key)}
+                handleStarReplacement={() => this.sendItemToTop(item, key)}
                 value={item.value}
               />
             ))}
@@ -140,6 +164,7 @@ class App extends React.Component {
                 key={key}
                 className={item.isStar ? "starListItem" : ""}
                 handleChangeItemList={this.changeItemList}
+                handleRemoveItem={() => { this.removeItem(key) }}
                 isDone={!item.isDone}
                 value={item.value}
               />
