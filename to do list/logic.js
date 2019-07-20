@@ -94,9 +94,9 @@ class ListItem extends React.Component {
               : "hide-list-item-op"
           }
         >
-          <div onClick={this.props.handleStarItem} className="op-btn starBtn">
+          {/* <div onClick={this.props.handleStarItem} className="op-btn starBtn">
             ★
-          </div>
+          </div> */}
           <div onClick={this.props.handleRemoveItem} className="op-btn rmvBtn">
             x
           </div>
@@ -117,12 +117,12 @@ class App extends React.Component {
     this.changeItemList = this.changeItemList.bind(this);
     this.removeItem = this.removeItem.bind(this)
     this.sendItemToTop = this.sendItemToTop.bind(this)
-
+    this.removeItem = this.removeItem.bind(this)
   }
 
   removeItem(key) {
     let tmpList = this.state.list;
-    tmpList.splice(key, 1);
+    tmpList = tmpList.splice(key, 1);
     this.setState({
       list: tmpList
     });
@@ -198,6 +198,7 @@ class App extends React.Component {
               isDone={item.isDone}
               isTextLineThrough={false}
               handleChangeItemList={this.changeItemList}
+              handleRemoveItem={this.removeItem}
               value={item.value}
             />
           ))}
